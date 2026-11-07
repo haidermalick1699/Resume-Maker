@@ -1,0 +1,13 @@
+.git
+.github
+.next
+node_modules
+npm-debug.log
+Dockerfile*
+docker-compose*
+README.md
+.env*.local
+dev.db*
+tests
+playwright-report
+test-results
