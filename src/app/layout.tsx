@@ -16,10 +16,11 @@ const merriweather = Merriweather({
 });
 
 export const metadata: Metadata = {
-  title: "ResumeForge — Free Online Resume Builder & ATS Resume Generator",
+  title: "Resume Maker — Free Professional Resume Builder & ATS Resume Generator",
   description:
     "Create high-scoring, ATS-optimized resumes in minutes. Choose from professional, recruiter-approved templates, customize live, and export to pixel-perfect PDF.",
   keywords: [
+    "resume maker",
     "resume builder",
     "CV maker",
     "ATS resume",
@@ -27,13 +28,13 @@ export const metadata: Metadata = {
     "cover letter generator",
     "professional CV",
   ],
-  authors: [{ name: "ResumeForge Team" }],
+  authors: [{ name: "Resume Maker Team" }],
   openGraph: {
-    title: "ResumeForge — Professional ATS-Friendly Resume Builder",
+    title: "Resume Maker — Professional ATS-Friendly Resume Builder",
     description:
       "Craft interview-winning resumes with real-time preview and ATS compliance testing.",
-    url: "https://resumeforge.com",
-    siteName: "ResumeForge",
+    url: "https://resumemaker.com",
+    siteName: "Resume Maker",
     locale: "en_US",
     type: "website",
   },
@@ -51,8 +52,8 @@ export default function RootLayout({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "ResumeForge",
-    url: "https://resumeforge.com",
+    name: "Resume Maker",
+    url: "https://resumemaker.com",
     description: "Production-grade ATS Resume and CV builder with live preview.",
     applicationCategory: "BusinessApplication",
     operatingSystem: "All",

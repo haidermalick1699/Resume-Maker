@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 test.describe("Public Site & SEO Routing", () => {
   test("Homepage renders with hero, key CTA, and structured SEO elements", async ({ page }) => {
     await page.goto("/");
-    await expect(page).toHaveTitle(/ResumeForge/);
+    await expect(page).toHaveTitle(/Resume Maker/);
 
     // Verify Hero CTA buttons exist
     const cta = page.getByRole("link", { name: /Build My Resume Free/i }).first();
@@ -45,3 +45,4 @@ test.describe("Public Site & SEO Routing", () => {
     await expect(page.getByRole("heading", { name: "Terms of Service" })).toBeVisible();
   });
 });
+

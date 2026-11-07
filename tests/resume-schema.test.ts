@@ -8,7 +8,7 @@ import {
 import { TEMPLATES, getTemplateById } from "../src/templates/registry";
 import { formatDate, generateId } from "../src/lib/utils";
 
-describe("ResumeForge Core Engine Tests", () => {
+describe("Resume Maker Core Engine Tests", () => {
   describe("Zod Resume Schema & Data Generators", () => {
     it("should validate a default blank resume structure", () => {
       const defaultResume = createDefaultResume();

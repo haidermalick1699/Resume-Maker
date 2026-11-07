@@ -53,10 +53,10 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl border border-slate-200 p-8">
+      <div className="max-w-md w-full bg-white rounded-3xl shadow-2xl border border-slate-200/80 p-8">
         <div className="text-center mb-6">
-          <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-extrabold text-xl mx-auto mb-2 shadow-sm">
-            R
+          <div className="w-12 h-12 bg-linear-to-br from-blue-600 via-indigo-600 to-violet-600 rounded-2xl flex items-center justify-center text-white font-black text-lg mx-auto mb-3 shadow-md shadow-blue-500/20">
+            RM
           </div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">Create Free Account</h1>
           <p className="text-xs text-slate-500 mt-1">

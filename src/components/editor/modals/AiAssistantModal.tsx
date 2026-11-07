@@ -18,7 +18,9 @@ export const AiAssistantModal: React.FC<AiAssistantModalProps> = ({ isOpen, onCl
   const [role, setRole] = useState(data.basics.label || "");
   const [tone, setTone] = useState("Executive");
   const [summaries, setSummaries] = useState<string[]>([]);
-  const [summaryLoading, setSummaryLoading] = useState(false);
+  const
+
+    [summaryLoading, setSummaryLoading] = useState(false);
 
   // Bullet state
   const [bulletText, setBulletText] = useState("");
@@ -143,25 +145,22 @@ export const AiAssistantModal: React.FC<AiAssistantModalProps> = ({ isOpen, onCl
         <div className="flex bg-slate-100 p-1 rounded-xl text-xs font-semibold mb-5">
           <button
             onClick={() => setActiveTab("summary")}
-            className={`flex-1 py-1.5 rounded-lg transition flex items-center justify-center gap-1.5 ${
-              activeTab === "summary" ? "bg-white text-slate-900 shadow-xs" : "text-slate-600"
-            }`}
+            className={`flex-1 py-1.5 rounded-lg transition flex items-center justify-center gap-1.5 ${activeTab === "summary" ? "bg-white text-slate-900 shadow-xs" : "text-slate-600"
+              }`}
           >
             <FileText className="w-3.5 h-3.5" /> Executive Summary
           </button>
           <button
             onClick={() => setActiveTab("bullet")}
-            className={`flex-1 py-1.5 rounded-lg transition flex items-center justify-center gap-1.5 ${
-              activeTab === "bullet" ? "bg-white text-slate-900 shadow-xs" : "text-slate-600"
-            }`}
+            className={`flex-1 py-1.5 rounded-lg transition flex items-center justify-center gap-1.5 ${activeTab === "bullet" ? "bg-white text-slate-900 shadow-xs" : "text-slate-600"
+              }`}
           >
             <Wand2 className="w-3.5 h-3.5" /> STAR Bullet Improver
           </button>
           <button
             onClick={() => setActiveTab("cover")}
-            className={`flex-1 py-1.5 rounded-lg transition flex items-center justify-center gap-1.5 ${
-              activeTab === "cover" ? "bg-white text-slate-900 shadow-xs" : "text-slate-600"
-            }`}
+            className={`flex-1 py-1.5 rounded-lg transition flex items-center justify-center gap-1.5 ${activeTab === "cover" ? "bg-white text-slate-900 shadow-xs" : "text-slate-600"
+              }`}
           >
             <Mail className="w-3.5 h-3.5" /> Cover Letter
           </button>
@@ -346,3 +345,4 @@ export const AiAssistantModal: React.FC<AiAssistantModalProps> = ({ isOpen, onCl
     </div>
   );
 };
+

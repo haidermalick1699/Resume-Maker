@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 import { PROFESSIONS } from "@/data/professions";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://resumeforge.com";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://resumemaker.com";
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {

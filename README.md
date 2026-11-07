@@ -1,6 +1,6 @@
-# ResumeForge 🚀
+# Resume Maker 🚀
 
-**ResumeForge** is an enterprise-grade, production-ready ATS Resume, CV, and Cover Letter Builder web application built end to end with Next.js 14 (App Router), TypeScript, Tailwind CSS, Prisma ORM, Zustand, Anthropic Claude 3.5 Sonnet, and Stripe.
+**Resume Maker** is an enterprise-grade, production-ready ATS Resume, CV, and Cover Letter Builder web application built end to end with Next.js 14 (App Router), TypeScript, Tailwind CSS, Prisma ORM, Zustand, Anthropic Claude 3.5 Sonnet, and Stripe.
 
 ---
 
@@ -14,7 +14,7 @@
 
 ### 2. User Authentication & Dashboard
 - **Security & Session Layer**: NextAuth credentials and JWT sessions, bcrypt password hashing, input validation via Zod, and brute-force rate limiting.
-- **1-Click Demo Login**: Pre-seeded `demo@resumeforge.com` account for instant evaluation.
+- **1-Click Demo Login**: Pre-seeded `demo@resumemaker.com` account for instant evaluation.
 - **Resume Management Dashboard**:
   - Live grid view showing real-time thumbnail previews, template badge, last-edited timestamp, and ATS score indicator.
   - 1-click duplicate, rename, delete actions with optimistic UI updates.
@@ -189,7 +189,7 @@ The application will be live at `http://localhost:3000` connected to containeriz
 3. In Project Settings > Environment Variables, configure:
    - `DATABASE_URL`: Hosted PostgreSQL URL (e.g. Supabase, Neon, AWS RDS, Railway)
    - `NEXTAUTH_SECRET`: Random 32-character string (`openssl rand -base64 32`)
-   - `NEXTAUTH_URL`: Your custom production domain (e.g. `https://resumeforge.com`)
+   - `NEXTAUTH_URL`: Your custom production domain (e.g. `https://resumemaker.com` or Vercel generated URL)
    - `ANTHROPIC_API_KEY`: Anthropic API Key
    - `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
 4. Deploy! Next.js will automatically optimize SSG pages and edge routes.
@@ -257,4 +257,4 @@ The application will be live at `http://localhost:3000` connected to containeriz
 ---
 
 ## 📄 License
-This project is proprietary software developed for ResumeForge. All rights reserved.
+This project is proprietary software developed for Resume Maker. All rights reserved.

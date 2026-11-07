@@ -22,7 +22,7 @@ export default function AdminLayout({
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
             <h1 className="font-extrabold text-base tracking-tight text-white">
-              ResumeForge Operations Portal
+              Resume Maker Operations Portal
             </h1>
           </div>
         </div>

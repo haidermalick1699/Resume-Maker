@@ -40,3 +40,4 @@ jobs:
 
       - name: Verify Production Next.js Build
         run: npm run build
+

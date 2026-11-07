@@ -3,8 +3,8 @@ import Link from "next/link";
 import { Shield, Lock, Eye, Download, Trash2, ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | ResumeForge",
-  description: "Learn how ResumeForge protects your personal data, resume content, and AI processing privacy.",
+  title: "Privacy Policy | Resume Maker",
+  description: "Learn how Resume Maker protects your personal data, resume content, and AI processing privacy.",
 };
 
 export default function PrivacyPolicyPage() {
@@ -29,7 +29,7 @@ export default function PrivacyPolicyPage() {
             </div>
           </div>
           <p className="text-base text-slate-300 leading-relaxed">
-            At ResumeForge, your privacy is our top priority. We believe your career data belongs strictly to you.
+            At Resume Maker, your privacy is our top priority. We believe your career data belongs strictly to you.
             This policy outlines how we collect, store, safeguard, and respect your personal information.
           </p>
         </div>
@@ -53,7 +53,7 @@ export default function PrivacyPolicyPage() {
               <Eye className="w-5 h-5 text-cyan-400" /> 2. AI Processing & Third-Party Protection
             </h2>
             <p className="mb-2">
-              ResumeForge utilizes Anthropic Claude API for AI summary generation, bullet point improvement, and ATS auditing:
+              Resume Maker utilizes Anthropic Claude API for AI summary generation, bullet point improvement, and ATS auditing:
             </p>
             <ul className="list-disc pl-6 space-y-2 text-slate-400">
               <li>Your inputs are transmitted securely via TLS 1.3 encryption.</li>
@@ -87,7 +87,7 @@ export default function PrivacyPolicyPage() {
             <h3 className="text-lg font-semibold text-white mb-2">Contact Privacy Operations</h3>
             <p className="text-slate-400">
               For any questions regarding your data or to submit a compliance inquiry, email our Data Protection Officer at{" "}
-              <a href="mailto:privacy@resumeforge.com" className="text-cyan-400 underline">privacy@resumeforge.com</a>.
+              <a href="mailto:privacy@resumemaker.com" className="text-cyan-400 underline">privacy@resumemaker.com</a>.
             </p>
           </section>
         </div>
@@ -95,3 +95,4 @@ export default function PrivacyPolicyPage() {
     </div>
   );
 }
+

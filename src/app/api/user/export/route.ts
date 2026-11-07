@@ -58,7 +58,7 @@ export async function GET() {
     const exportData = {
       exportedAt: new Date().toISOString(),
       metadata: {
-        application: "ResumeForge",
+        application: "Resume Maker",
         formatVersion: "1.0",
         compliance: "GDPR / CCPA User Data Portability",
       },
@@ -74,7 +74,7 @@ export async function GET() {
       jobTailoringHistory: user.jobTailorings,
     };
 
-    const filename = `resumeforge-data-export-${new Date().toISOString().split("T")[0]}.json`;
+    const filename = `resumemaker-data-export-${new Date().toISOString().split("T")[0]}.json`;
 
     return new NextResponse(JSON.stringify(exportData, null, 2), {
       status: 200,
@@ -91,3 +91,4 @@ export async function GET() {
     );
   }
 }
+

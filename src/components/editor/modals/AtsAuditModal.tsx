@@ -175,3 +175,4 @@ export const AtsAuditModal: React.FC<AtsAuditModalProps> = ({ isOpen, onClose })
     </div>
   );
 };
+

@@ -204,3 +204,4 @@ export const JobTailoringModal: React.FC<JobTailoringModalProps> = ({ isOpen, on
     </div>
   );
 };
+

@@ -33,7 +33,7 @@ export const PageWrapper: React.FC<PageWrapperProps> = ({
         {hasWatermark && (
           <div className="absolute bottom-2 left-0 right-0 text-center pointer-events-none py-1 border-t border-slate-200 bg-slate-50/90 print:bg-slate-50">
             <span className="text-[10px] text-slate-500 font-sans tracking-wide">
-              Created with <strong className="text-slate-700">ResumeForge</strong> — Free Plan • Upgrade to remove watermark
+              Created with <strong className="text-slate-800 font-semibold">Resume Maker</strong> — Free Plan • Upgrade to remove watermark
             </span>
           </div>
         )}

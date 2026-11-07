@@ -134,3 +134,4 @@ export const ImportResumeModal: React.FC<ImportResumeModalProps> = ({ isOpen, on
     </div>
   );
 };
+

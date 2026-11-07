@@ -8,19 +8,19 @@ export function CookieConsent() {
   const [showBanner, setShowBanner] = useState(false);
 
   useEffect(() => {
-    const consent = localStorage.getItem("resumeforge_cookie_consent");
+    const consent = localStorage.getItem("resumemaker_cookie_consent");
     if (!consent) {
       setShowBanner(true);
     }
   }, []);
 
   const handleAcceptAll = () => {
-    localStorage.setItem("resumeforge_cookie_consent", "all");
+    localStorage.setItem("resumemaker_cookie_consent", "all");
     setShowBanner(false);
   };
 
   const handleEssentialOnly = () => {
-    localStorage.setItem("resumeforge_cookie_consent", "essential");
+    localStorage.setItem("resumemaker_cookie_consent", "essential");
     setShowBanner(false);
   };
 
@@ -39,7 +39,7 @@ export function CookieConsent() {
         <div className="flex-1">
           <h3 className="text-sm font-semibold text-white mb-1">We respect your privacy</h3>
           <p className="text-xs text-slate-400 leading-relaxed mb-4">
-            ResumeForge uses essential cookies for authentication and optional cookies to analyze platform performance. We never sell your personal or resume data. Read our{" "}
+            Resume Maker uses essential cookies for authentication and optional cookies to analyze platform performance. We never sell your personal or resume data. Read our{" "}
             <Link href="/privacy" className="text-cyan-400 underline hover:text-cyan-300">
               Privacy Policy
             </Link>.
@@ -70,3 +70,4 @@ export function CookieConsent() {
     </div>
   );
 }
+

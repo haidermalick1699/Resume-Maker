@@ -102,7 +102,7 @@ export async function createCheckoutSession({
         price_data: {
           currency: "usd",
           product_data: {
-            name: `ResumeForge ${selectedPlan.name}`,
+            name: `Resume Maker ${selectedPlan.name}`,
             description: "Full access to ATS resume builder, 11+ templates, and zero watermark PDF/DOCX downloads.",
           },
           unit_amount: selectedPlan.amount,

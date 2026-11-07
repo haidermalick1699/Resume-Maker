@@ -12,7 +12,7 @@ const FAQS = [
   },
   {
     q: "Will I lose my information if I change templates?",
-    a: "No. Unlike older builders that lock your text into template blocks, ResumeForge uses a decoupled data architecture. When you switch templates, your resume data automatically reformats into the new design without any data loss.",
+    a: "No. Unlike older builders that lock your text into template blocks, Resume Maker uses a decoupled data architecture. When you switch templates, your resume data automatically reformats into the new design without any data loss.",
   },
   {
     q: "Can I customize colors, fonts, and margins?",
@@ -25,10 +25,10 @@ export default function FaqPage() {
     <div className="min-h-screen bg-slate-50 flex flex-col">
       <header className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-base">
-            R
+          <div className="w-8 h-8 bg-linear-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-sm shadow-xs">
+            RM
           </div>
-          <span className="font-extrabold text-base text-slate-900 tracking-tight">ResumeForge</span>
+          <span className="font-extrabold text-base text-slate-900 tracking-tight">Resume Maker</span>
         </Link>
         <Link href="/login" className="text-xs font-semibold text-slate-700 hover:text-slate-900">
           Sign In

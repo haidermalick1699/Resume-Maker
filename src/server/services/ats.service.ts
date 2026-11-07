@@ -278,3 +278,4 @@ export function auditResumeAts(resume: ResumeData): AtsCheckResult {
     suggestedActionVerbs: SUGGESTED_VERBS_BY_ROLE.engineering,
   };
 }
+

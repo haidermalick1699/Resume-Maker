@@ -169,3 +169,4 @@ export function parsePlainTextResume(rawText: string): ResumeData {
 
   return result;
 }
+

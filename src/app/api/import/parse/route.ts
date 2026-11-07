@@ -28,3 +28,4 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: error.message || "Failed to parse resume" }, { status: 400 });
   }
 }
+

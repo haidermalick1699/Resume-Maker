@@ -20,10 +20,10 @@ export default function HomePage() {
       <header className="border-b border-slate-100 sticky top-0 bg-white/90 backdrop-blur-md z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center text-white font-extrabold text-lg shadow-sm">
-              R
+            <div className="w-10 h-10 bg-linear-to-br from-blue-600 via-indigo-600 to-violet-600 rounded-2xl flex items-center justify-center text-white font-black text-lg shadow-md shadow-blue-500/20">
+              RM
             </div>
-            <span className="font-black text-xl tracking-tight">ResumeForge</span>
+            <span className="font-black text-xl tracking-tight text-slate-900">Resume Maker</span>
           </div>
 
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
@@ -199,7 +199,10 @@ export default function HomePage() {
       <footer className="mt-auto bg-slate-900 text-slate-400 text-xs py-12 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
           <div>
-            <div className="font-black text-white text-base mb-3">ResumeForge</div>
+            <div className="font-black text-white text-base mb-3 flex items-center gap-2">
+              <div className="w-6 h-6 bg-blue-600 rounded-lg flex items-center justify-center text-white text-xs font-bold">RM</div>
+              Resume Maker
+            </div>
             <p className="text-slate-400 leading-relaxed text-[11px]">
               The intelligent, ATS-friendly resume and CV builder for ambitious career professionals.
             </p>
@@ -234,7 +237,7 @@ export default function HomePage() {
         </div>
 
         <div className="max-w-6xl mx-auto border-t border-slate-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px]">
-          <div>© {new Date().getFullYear()} ResumeForge. All rights reserved.</div>
+          <div>© {new Date().getFullYear()} Resume Maker. All rights reserved.</div>
           <div className="flex gap-4">
             <Link href="/privacy" className="hover:text-white transition">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-white transition">Terms of Service</Link>

@@ -51,7 +51,7 @@ describe("Phase 4: Security, Rate Limiting & GDPR Compliance", () => {
     const sampleExport = {
       exportedAt: new Date().toISOString(),
       metadata: {
-        application: "ResumeForge",
+        application: "Resume Maker",
         formatVersion: "1.0",
         compliance: "GDPR / CCPA User Data Portability",
       },
@@ -76,4 +76,11 @@ describe("Phase 4: Security, Rate Limiting & GDPR Compliance", () => {
     expect(sampleExport.user.email).toBe("test@example.com");
     expect(sampleExport.resumes).toHaveLength(1);
   });
+
+  it("Validates PDF and PNG export filename sanitization", () => {
+    const raw = "Alex Sterling / Senior Lead & Architect! #1";
+    const safe = raw.replace(/[^a-zA-Z0-9_\- ]/g, "").replace(/\s+/g, "_");
+    expect(safe).toBe("Alex_Sterling_Senior_Lead_Architect_1");
+  });
 });
+

@@ -196,7 +196,7 @@ export const PROFESSIONS: ProfessionData[] = [
     faqs: [
       {
         q: "Should my portfolio link be clickable on the PDF?",
-        a: "Yes! ResumeForge embeds live hyperlinks in exported PDFs so hiring managers can click directly through to your Dribbble, Behance, or custom portfolio site.",
+        a: "Yes! Resume Maker embeds live hyperlinks in exported PDFs so hiring managers can click directly through to your Dribbble, Behance, or custom portfolio site.",
       },
     ],
   },

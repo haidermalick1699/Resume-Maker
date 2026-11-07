@@ -24,3 +24,4 @@ test.describe("Authentication, Dashboard & Editor Workflow", () => {
     await expect(passwordInput).toBeVisible();
   });
 });
+

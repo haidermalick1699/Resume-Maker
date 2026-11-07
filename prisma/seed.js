@@ -10,10 +10,10 @@ async function main() {
 
   // 1. Create or upsert demo user
   const demoUser = await prisma.user.upsert({
-    where: { email: "demo@resumeforge.com" },
+    where: { email: "demo@resumemaker.com" },
     update: {},
     create: {
-      email: "demo@resumeforge.com",
+      email: "demo@resumemaker.com",
       name: "Alex Sterling",
       hashedPassword,
       role: "USER",
@@ -23,6 +23,18 @@ async function main() {
           status: "ACTIVE",
         },
       },
+    },
+  });
+
+  // Also support demo@resumeforge.com for backwards compatibility
+  await prisma.user.upsert({
+    where: { email: "demo@resumeforge.com" },
+    update: {},
+    create: {
+      email: "demo@resumeforge.com",
+      name: "Alex Sterling",
+      hashedPassword,
+      role: "USER",
     },
   });
 
