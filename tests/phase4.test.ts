@@ -82,5 +82,46 @@ describe("Phase 4: Security, Rate Limiting & GDPR Compliance", () => {
     const safe = raw.replace(/[^a-zA-Z0-9_\- ]/g, "").replace(/\s+/g, "_");
     expect(safe).toBe("Alex_Sterling_Senior_Lead_Architect_1");
   });
+
+  it("Generates valid binary PDF buffer from resume content", async () => {
+    const { generatePdfResume } = await import("@/server/services/export-pdf.service");
+    const { createSampleResume, defaultDesign } = await import("@/schemas/resume.schema");
+    const sample = createSampleResume();
+    const pdfBuf = await generatePdfResume(sample, defaultDesign);
+
+    expect(pdfBuf).toBeInstanceOf(Buffer);
+    expect(pdfBuf.length).toBeGreaterThan(1000);
+    // PDF magic number check (%PDF)
+    const header = pdfBuf.subarray(0, 4).toString("ascii");
+    expect(header).toBe("%PDF");
+  });
+
+  it("Builds isomorphic vector PDF document with custom margins and paper sizes", async () => {
+    const { buildJsPdfResume } = await import("@/lib/pdf-builder");
+    const { createSampleResume, defaultDesign } = await import("@/schemas/resume.schema");
+    const sample = createSampleResume();
+
+    // Test compact margins + US Letter
+    const docLetter = buildJsPdfResume(sample, {
+      ...defaultDesign,
+      paperSize: "LETTER",
+      pageMargins: "compact",
+      primaryColor: "#059669",
+    });
+    expect(docLetter).toBeDefined();
+    const letterBuf = Buffer.from(docLetter.output("arraybuffer"));
+    expect(letterBuf.subarray(0, 4).toString("ascii")).toBe("%PDF");
+
+    // Test spacious margins + A4
+    const docA4 = buildJsPdfResume(sample, {
+      ...defaultDesign,
+      paperSize: "A4",
+      pageMargins: "spacious",
+      primaryColor: "#7C3AED",
+    });
+    expect(docA4).toBeDefined();
+    const a4Buf = Buffer.from(docA4.output("arraybuffer"));
+    expect(a4Buf.subarray(0, 4).toString("ascii")).toBe("%PDF");
+  });
 });
 

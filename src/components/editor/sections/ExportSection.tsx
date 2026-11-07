@@ -2,7 +2,11 @@
 
 import React, { useState } from "react";
 import { useResumeStore } from "@/stores/useResumeStore";
-import { exportResumeToPdf, exportResumeToPng } from "@/lib/pdf-export";
+import {
+  exportResumeToPdf,
+  exportResumeToDocx,
+  exportResumeToPng,
+} from "@/lib/pdf-export";
 import {
   Download,
   FileText,
@@ -10,54 +14,91 @@ import {
   FileCode,
   Printer,
   CheckCircle2,
-  ShieldCheck,
-  Sparkles,
+  AlertCircle,
   Loader2,
-  ExternalLink,
 } from "lucide-react";
 
 export const ExportSection: React.FC = () => {
-  const { resumeId, title, design } = useResumeStore();
+  const { resumeId, title, data, design, isDirty, saveResume } = useResumeStore();
   const [downloadingPdf, setDownloadingPdf] = useState(false);
+  const [downloadingDocx, setDownloadingDocx] = useState(false);
   const [downloadingPng, setDownloadingPng] = useState(false);
-  const [downloadSuccess, setDownloadSuccess] = useState<string | null>(null);
+  const [statusMessage, setStatusMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
+
+  const notify = (type: "success" | "error", text: string) => {
+    setStatusMessage({ type, text });
+    setTimeout(() => setStatusMessage(null), 4500);
+  };
 
   const handleDownloadPdf = async () => {
     setDownloadingPdf(true);
-    setDownloadSuccess(null);
+    setStatusMessage(null);
     try {
+      if (isDirty) {
+        await saveResume();
+      }
       const ok = await exportResumeToPdf({
         filename: title || "Resume",
         paperSize: design.paperSize,
+        resumeId,
+        data,
+        design,
       });
       if (ok) {
-        setDownloadSuccess("PDF successfully downloaded to your device!");
+        notify("success", "✓ PDF resume successfully saved to your Downloads folder!");
+      } else {
+        notify("error", "Failed to generate PDF. Please try again.");
       }
+    } catch (err) {
+      console.error("PDF export error:", err);
+      notify("error", "An error occurred while generating your PDF.");
     } finally {
       setDownloadingPdf(false);
-      setTimeout(() => setDownloadSuccess(null), 4000);
+    }
+  };
+
+  const handleDownloadDocx = async () => {
+    setDownloadingDocx(true);
+    setStatusMessage(null);
+    try {
+      if (isDirty) {
+        await saveResume();
+      }
+      if (resumeId) {
+        await exportResumeToDocx({
+          resumeId,
+          filename: title || "Resume",
+        });
+        notify("success", "✓ Word document (.docx) successfully downloaded!");
+      } else {
+        notify("error", "Please save your resume first before exporting to Word.");
+      }
+    } catch (err) {
+      console.error("DOCX export error:", err);
+      notify("error", "Failed to generate Word document.");
+    } finally {
+      setDownloadingDocx(false);
     }
   };
 
   const handleDownloadPng = async () => {
     setDownloadingPng(true);
-    setDownloadSuccess(null);
+    setStatusMessage(null);
     try {
       const ok = await exportResumeToPng({
         filename: title || "Resume",
       });
       if (ok) {
-        setDownloadSuccess("Image (.png) successfully downloaded to your device!");
+        notify("success", "✓ Resume image (.png) successfully downloaded!");
+      } else {
+        notify("error", "Failed to capture image screenshot.");
       }
     } finally {
       setDownloadingPng(false);
-      setTimeout(() => setDownloadSuccess(null), 4000);
     }
-  };
-
-  const handleDownloadDocx = () => {
-    if (!resumeId) return;
-    window.open(`/api/resumes/${resumeId}/export/docx`, "_blank");
   };
 
   const handleDownloadTxt = () => {
@@ -78,27 +119,37 @@ export const ExportSection: React.FC = () => {
         </p>
       </div>
 
-      {downloadSuccess && (
-        <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-xl p-3 flex items-center gap-2 animate-in fade-in slide-in-from-top-1">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-          <span>{downloadSuccess}</span>
+      {statusMessage && (
+        <div
+          className={`border text-xs rounded-xl p-3 flex items-center gap-2 animate-in fade-in slide-in-from-top-1 ${
+            statusMessage.type === "success"
+              ? "bg-emerald-50 border-emerald-200 text-emerald-800"
+              : "bg-red-50 border-red-200 text-red-800"
+          }`}
+        >
+          {statusMessage.type === "success" ? (
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+          ) : (
+            <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+          )}
+          <span>{statusMessage.text}</span>
         </div>
       )}
 
       {/* Export Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* PDF Document Card */}
-        <div className="bg-white rounded-2xl border-2 border-blue-600/80 p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between relative overflow-hidden group">
+        <div className="bg-white rounded-2xl border-2 border-blue-600 p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between relative overflow-hidden group">
           <div className="absolute top-3 right-3 bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
-            Most Popular
+            Recommended
           </div>
           <div>
-            <div className="w-10 h-10 bg-red-50 text-red-600 rounded-xl flex items-center justify-center mb-3">
+            <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-3">
               <Download className="w-5 h-5" />
             </div>
             <h3 className="font-bold text-slate-900 text-sm mb-1">PDF Document (.pdf)</h3>
             <p className="text-xs text-slate-500 mb-4 leading-relaxed">
-              Crisp 300-DPI vector PDF with embedded fonts and selectable text. Ideal for uploading to LinkedIn, Indeed, and company portals.
+              Crisp vector typography with embedded fonts and 100% selectable text. Ideal for uploading to LinkedIn, Indeed, Workday, and company portals.
             </p>
           </div>
           <button
@@ -121,7 +172,7 @@ export const ExportSection: React.FC = () => {
         </div>
 
         {/* Word Document (.docx) */}
-        <div className="bg-white rounded-2xl border border-slate-200 hover:border-slate-300 p-5 shadow-xs hover:shadow-md transition flex flex-col justify-between">
+        <div className="bg-white rounded-2xl border border-slate-200 hover:border-blue-300 p-5 shadow-xs hover:shadow-md transition flex flex-col justify-between">
           <div>
             <div className="w-10 h-10 bg-blue-50 text-blue-700 rounded-xl flex items-center justify-center mb-3">
               <FileText className="w-5 h-5" />
@@ -133,10 +184,20 @@ export const ExportSection: React.FC = () => {
           </div>
           <button
             onClick={handleDownloadDocx}
-            className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs py-2.5 px-4 rounded-xl shadow-xs transition flex items-center justify-center gap-2"
+            disabled={downloadingDocx}
+            className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs py-2.5 px-4 rounded-xl shadow-xs transition flex items-center justify-center gap-2 disabled:opacity-50"
           >
-            <FileText className="w-4 h-4" />
-            Download Word (.docx)
+            {downloadingDocx ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Generating Word...
+              </>
+            ) : (
+              <>
+                <FileText className="w-4 h-4" />
+                Download Word (.docx)
+              </>
+            )}
           </button>
         </div>
 
@@ -198,7 +259,7 @@ export const ExportSection: React.FC = () => {
             <Printer className="w-4 h-4" />
           </div>
           <div>
-            <div className="text-xs font-bold text-slate-800">Print or Save via Browser</div>
+            <div className="text-xs font-bold text-slate-800">Print via Browser</div>
             <div className="text-[11px] text-slate-500">
               Open the system print window to print directly to a physical printer.
             </div>

@@ -175,6 +175,8 @@ export const ResumeDesignSchema = z.object({
   showWatermark: z.boolean().default(false),
 });
 
+export const defaultDesign = ResumeDesignSchema.parse({});
+
 export type ResumeData = z.infer<typeof ResumeDataSchema>;
 export type ResumeDesign = z.infer<typeof ResumeDesignSchema>;
 export type WorkExperience = z.infer<typeof WorkExperienceSchema>;
