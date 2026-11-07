@@ -20,9 +20,8 @@ export const PageWrapper: React.FC<PageWrapperProps> = ({
       <div
         id="resume-page-canvas"
         dir={isRtl ? "rtl" : "ltr"}
-        className={`bg-white shadow-xl print:shadow-none print:w-full transition-all relative overflow-hidden ${
-          isRtl ? "text-right" : "text-left"
-        } ${isA4 ? "w-[794px] min-h-[1123px]" : "w-[816px] min-h-[1056px]"}`}
+        className={`bg-white shadow-xl print:shadow-none print:w-full transition-all relative overflow-hidden ${isRtl ? "text-right" : "text-left"
+          } ${isA4 ? "w-[794px] min-h-[1123px]" : "w-[816px] min-h-[1056px]"}`}
         style={{
           backgroundColor: design.backgroundColor || "#FFFFFF",
         }}

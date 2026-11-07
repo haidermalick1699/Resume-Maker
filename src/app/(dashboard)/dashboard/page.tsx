@@ -243,26 +243,34 @@ export default function DashboardPage() {
                       })}
                     </span>
 
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1.5">
+                      <a
+                        href={`/api/resumes/${resume.id}/export/docx`}
+                        download
+                        className="p-1.5 hover:bg-blue-50 text-slate-500 hover:text-blue-700 rounded-lg transition"
+                        title="Download Word Document (.docx)"
+                      >
+                        <FileText className="w-3.5 h-3.5" />
+                      </a>
                       <button
                         onClick={() => handleDuplicate(resume.id)}
-                        className="p-1.5 hover:bg-slate-100 rounded text-slate-500 hover:text-slate-800 transition"
-                        title="Duplicate"
+                        className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-500 hover:text-slate-800 transition"
+                        title="Duplicate Resume"
                       >
                         <Copy className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => handleDelete(resume.id)}
-                        className="p-1.5 hover:bg-red-50 rounded text-slate-400 hover:text-red-600 transition"
-                        title="Delete"
+                        className="p-1.5 hover:bg-red-50 rounded-lg text-slate-400 hover:text-red-600 transition"
+                        title="Delete Resume"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
                       <Link
                         href={`/editor/${resume.id}`}
-                        className="ml-1 text-xs font-semibold bg-blue-50 text-blue-600 hover:bg-blue-100 px-2.5 py-1 rounded-lg transition"
+                        className="ml-1 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg shadow-2xs transition"
                       >
-                        Edit
+                        Edit & Save
                       </Link>
                     </div>
                   </div>

@@ -10,6 +10,7 @@ import { ProjectsSection } from "./sections/ProjectsSection";
 import { CustomSection } from "./sections/CustomSection";
 import { StyleCustomizer } from "./StyleCustomizer";
 import { TemplatesSection } from "./TemplatesSection";
+import { ExportSection } from "./sections/ExportSection";
 
 export const EditorPanel: React.FC = () => {
   const { activeSection } = useEditorUIStore();
@@ -24,6 +25,7 @@ export const EditorPanel: React.FC = () => {
       {activeSection === "custom" && <CustomSection />}
       {activeSection === "design" && <StyleCustomizer />}
       {activeSection === "templates" && <TemplatesSection />}
+      {activeSection === "export" && <ExportSection />}
     </div>
   );
 };

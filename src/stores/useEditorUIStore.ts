@@ -8,7 +8,8 @@ export type EditorSectionKey =
   | "projects"
   | "custom"
   | "design"
-  | "templates";
+  | "templates"
+  | "export";
 
 interface EditorUIState {
   activeSection: EditorSectionKey;

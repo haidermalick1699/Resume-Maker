@@ -11,6 +11,7 @@ import {
   PlusSquare,
   Palette,
   LayoutTemplate,
+  Download,
 } from "lucide-react";
 
 interface NavItem {
@@ -28,6 +29,7 @@ const NAV_ITEMS: NavItem[] = [
   { key: "custom", label: "Custom Sections", icon: PlusSquare },
   { key: "design", label: "Design & Formatting", icon: Palette },
   { key: "templates", label: "Templates", icon: LayoutTemplate },
+  { key: "export", label: "Download & Export", icon: Download },
 ];
 
 export const EditorSidebar: React.FC = () => {
