@@ -275,21 +275,19 @@ export const EditorHeader: React.FC = () => {
         <div className="flex lg:hidden bg-slate-100 p-0.5 rounded-xl text-xs font-semibold mx-1">
           <button
             onClick={() => setActiveMobileTab("editor")}
-            className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg transition ${
-              activeMobileTab === "editor"
+            className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg transition ${activeMobileTab === "editor"
                 ? "bg-white text-slate-900 shadow-xs"
                 : "text-slate-500 hover:text-slate-800"
-            }`}
+              }`}
           >
             <FileEdit className="w-3.5 h-3.5" /> Edit
           </button>
           <button
             onClick={() => setActiveMobileTab("preview")}
-            className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg transition ${
-              activeMobileTab === "preview"
+            className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg transition ${activeMobileTab === "preview"
                 ? "bg-white text-slate-900 shadow-xs"
                 : "text-slate-500 hover:text-slate-800"
-            }`}
+              }`}
           >
             <Eye className="w-3.5 h-3.5" /> Preview
           </button>
@@ -403,13 +401,12 @@ export const EditorHeader: React.FC = () => {
       {toast && (
         <div className="fixed bottom-5 right-5 z-50 animate-in fade-in slide-in-from-bottom-2">
           <div
-            className={`flex items-center gap-2.5 px-4 py-3 rounded-2xl shadow-xl text-xs sm:text-sm font-semibold border ${
-              toast.type === "success"
+            className={`flex items-center gap-2.5 px-4 py-3 rounded-2xl shadow-xl text-xs sm:text-sm font-semibold border ${toast.type === "success"
                 ? "bg-emerald-600 text-white border-emerald-500"
                 : toast.type === "error"
-                ? "bg-red-600 text-white border-red-500"
-                : "bg-slate-900 text-white border-slate-800"
-            }`}
+                  ? "bg-red-600 text-white border-red-500"
+                  : "bg-slate-900 text-white border-slate-800"
+              }`}
           >
             {toast.type === "success" && <CheckCircle2 className="w-4 h-4 shrink-0 text-white" />}
             {toast.type === "error" && <AlertCircle className="w-4 h-4 shrink-0 text-white" />}
