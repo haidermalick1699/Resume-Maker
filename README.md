@@ -258,3 +258,5 @@ The application will be live at `http://localhost:3000` connected to containeriz
 
 ## 📄 License
 This project is proprietary software developed for Resume Maker. All rights reserved.
+#   R e s u m e - M a k e r  
+ 
