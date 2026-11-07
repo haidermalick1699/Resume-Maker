@@ -71,6 +71,7 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET || "resumemaker-default-secret-key-replace-in-env",
+  secret: process.env.NEXTAUTH_SECRET || "resumeforge_jwt_secret_key_minimum_32_characters_long_for_security",
+  useSecureCookies: process.env.NODE_ENV === "production",
 };
 

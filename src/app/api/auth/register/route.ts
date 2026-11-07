@@ -5,6 +5,8 @@ import { createSampleResume } from "@/schemas/resume.schema";
 import bcrypt from "bcryptjs";
 import { applyRateLimit } from "@/server/middleware/rate-limit";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: Request) {
   try {
     const rateLimit = applyRateLimit(req, "auth");
