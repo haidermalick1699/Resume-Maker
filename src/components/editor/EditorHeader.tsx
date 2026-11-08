@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useResumeStore } from "@/stores/useResumeStore";
 import { useEditorUIStore } from "@/stores/useEditorUIStore";
+import { LogoIcon } from "@/components/ui/Logo";
 import {
   exportResumeToPdf,
   exportResumeToDocx,
@@ -192,11 +193,11 @@ export const EditorHeader: React.FC = () => {
             <ArrowLeft className="w-5 h-5" />
           </Link>
 
-          {/* Brand Tag */}
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 via-indigo-600 to-blue-700 rounded-xl flex items-center justify-center text-white font-black text-xs shadow-xs">
-              RM
-            </div>
+          {/* Brand Logo & Title */}
+          <div className="flex items-center gap-2.5">
+            <Link href="/" title="Go to Home" className="transition-transform hover:scale-105">
+              <LogoIcon size="sm" />
+            </Link>
 
             {/* Editable Title */}
             {isEditingTitle ? (
@@ -248,11 +249,11 @@ export const EditorHeader: React.FC = () => {
           </div>
         </div>
 
-        {/* Center: AI, ATS & Job Tools (Desktop) */}
-        <div className="hidden xl:flex items-center gap-2">
+        {/* Center: AI, ATS & Job Tools */}
+        <div className="hidden lg:flex items-center gap-2">
           <button
             onClick={() => setShowAiModal(true)}
-            className="flex items-center gap-1.5 text-xs font-semibold text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200/80 rounded-xl px-3 py-1.5 shadow-2xs transition"
+            className="flex items-center gap-1.5 text-xs font-bold text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200/80 rounded-xl px-3 py-1.5 shadow-2xs transition active:scale-95"
           >
             <Sparkles className="w-3.5 h-3.5 text-purple-600" />
             <span>AI Copilot</span>
@@ -260,7 +261,7 @@ export const EditorHeader: React.FC = () => {
 
           <button
             onClick={() => setShowAtsModal(true)}
-            className="flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/80 rounded-xl px-3 py-1.5 shadow-2xs transition"
+            className="flex items-center gap-1.5 text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/80 rounded-xl px-3 py-1.5 shadow-2xs transition active:scale-95"
           >
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
             <span>ATS Audit</span>
@@ -268,7 +269,7 @@ export const EditorHeader: React.FC = () => {
 
           <button
             onClick={() => setShowTailorModal(true)}
-            className="flex items-center gap-1.5 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200/80 rounded-xl px-3 py-1.5 shadow-2xs transition"
+            className="flex items-center gap-1.5 text-xs font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200/80 rounded-xl px-3 py-1.5 shadow-2xs transition active:scale-95"
           >
             <Target className="w-3.5 h-3.5 text-blue-600" />
             <span>Job Tailor</span>

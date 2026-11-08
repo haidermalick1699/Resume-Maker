@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { Logo } from "@/components/ui/Logo";
 import {
   Sparkles,
   Download,
@@ -15,6 +15,8 @@ import {
   Layers,
   Check,
   ChevronRight,
+  Star,
+  Zap,
 } from "lucide-react";
 
 export default function HomePage() {
@@ -23,20 +25,13 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-white text-slate-900 flex flex-col selection:bg-blue-100 selection:text-blue-900">
       {/* Subtle top ambient lighting */}
-      <div className="absolute top-0 inset-x-0 h-80 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(59,130,246,0.12),rgba(255,255,255,0))] pointer-events-none -z-10" />
+      <div className="absolute top-0 inset-x-0 h-96 bg-[radial-gradient(ellipse_80%_60%_at_50%_-20%,rgba(59,130,246,0.15),rgba(99,102,241,0.06),rgba(255,255,255,0))] pointer-events-none -z-10" />
 
-      {/* Clean Navbar with Direct Access */}
-      <header className="border-b border-slate-200/80 sticky top-0 bg-white/90 backdrop-blur-md z-40">
+      {/* Clean Navbar with Direct Access & High Standard Branding */}
+      <header className="border-b border-slate-200/80 sticky top-0 bg-white/85 backdrop-blur-lg z-40 shadow-2xs">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 bg-gradient-to-br from-blue-600 via-indigo-600 to-blue-700 rounded-xl flex items-center justify-center text-white font-black text-sm shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
-              RM
-            </div>
-            <span className="font-extrabold text-xl tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors">
-              Resume Maker
-            </span>
-          </Link>
+          {/* Brand Logo */}
+          <Logo size="md" href="/" />
 
           {/* Functional Navigation */}
           <nav className="hidden sm:flex items-center gap-6 text-sm font-semibold text-slate-600">
@@ -292,11 +287,9 @@ export default function HomePage() {
       {/* Clean Compact Footer */}
       <footer className="mt-auto bg-slate-900 text-slate-400 text-xs py-8 px-4 sm:px-6 border-t border-slate-800">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px]">
-          <div className="flex items-center gap-2 text-slate-300 font-bold">
-            <div className="w-5 h-5 bg-blue-600 rounded flex items-center justify-center text-white text-[10px] font-black">
-              RM
-            </div>
-            Resume Maker • © {new Date().getFullYear()} All rights reserved.
+          <div className="flex items-center gap-2.5 text-slate-300 font-bold">
+            <Logo size="sm" showText={false} />
+            <span>Resume Maker • © {new Date().getFullYear()} All rights reserved.</span>
           </div>
 
           <div className="flex items-center gap-5 text-slate-400">

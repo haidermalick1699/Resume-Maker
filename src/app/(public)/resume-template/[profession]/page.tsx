@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
+import { Logo } from "@/components/ui/Logo";
 import { PROFESSIONS, getProfessionBySlug } from "@/data/professions";
 import { getTemplateById } from "@/templates/registry";
 import {
@@ -56,13 +57,8 @@ export default function ProfessionLandingPage({ params }: PageProps) {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       {/* Navbar */}
-      <header className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between sticky top-0 z-30">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-linear-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-sm shadow-xs">
-            RM
-          </div>
-          <span className="font-extrabold text-base text-slate-900 tracking-tight">Resume Maker</span>
-        </Link>
+      <header className="bg-white/90 backdrop-blur-md border-b border-slate-200 px-6 py-3.5 flex items-center justify-between sticky top-0 z-30 shadow-2xs">
+        <Logo size="md" href="/" />
         <div className="flex items-center gap-3">
           <Link
             href={`/dashboard?template=${recommendedTemplate.id}&role=${encodeURIComponent(prof.name)}`}

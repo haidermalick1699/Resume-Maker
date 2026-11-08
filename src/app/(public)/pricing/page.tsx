@@ -1,18 +1,14 @@
 import React from "react";
 import Link from "next/link";
+import { Logo } from "@/components/ui/Logo";
 import { Check, Sparkles } from "lucide-react";
 
 export default function PricingPage() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       {/* Header */}
-      <header className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-linear-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-sm shadow-xs">
-            RM
-          </div>
-          <span className="font-extrabold text-base text-slate-900 tracking-tight">Resume Maker</span>
-        </Link>
+      <header className="bg-white/90 backdrop-blur-md border-b border-slate-200 px-6 py-3.5 flex items-center justify-between sticky top-0 z-20 shadow-2xs">
+        <Logo size="md" href="/" />
         <Link
           href="/dashboard"
           className="text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-2 rounded-xl shadow-xs transition"
