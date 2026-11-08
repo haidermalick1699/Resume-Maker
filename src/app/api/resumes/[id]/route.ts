@@ -3,25 +3,40 @@ import { prisma } from "@/server/db/prisma";
 
 export const dynamic = "force-dynamic";
 
+function safeJsonParse(value: any, fallback: any = {}) {
+  if (!value) return fallback;
+  if (typeof value === "object") return value;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return fallback;
+  }
+}
+
 export async function GET(
   _req: Request,
   { params }: { params: { id: string } }
 ) {
-  const resume = await prisma.resume.findFirst({
-    where: { id: params.id },
-  });
+  try {
+    const resume = await prisma.resume.findFirst({
+      where: { id: params.id },
+    });
 
-  if (!resume) {
-    return NextResponse.json({ error: "Resume not found" }, { status: 404 });
+    if (!resume) {
+      return NextResponse.json({ error: "Resume not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({
+      resume: {
+        ...resume,
+        content: safeJsonParse(resume.content),
+        design: safeJsonParse(resume.design),
+      },
+    });
+  } catch (error: any) {
+    console.error("GET /api/resumes/[id] error:", error);
+    return NextResponse.json({ error: "Failed to load resume" }, { status: 500 });
   }
-
-  return NextResponse.json({
-    resume: {
-      ...resume,
-      content: typeof resume.content === "string" ? JSON.parse(resume.content) : resume.content,
-      design: typeof resume.design === "string" ? JSON.parse(resume.design) : resume.design,
-    },
-  });
 }
 
 export async function PUT(
@@ -62,7 +77,8 @@ export async function DELETE(
     await prisma.resume.delete({
       where: { id: params.id },
     });
-    return NextResponse.json({ message: "Resume deleted successfully" });
+
+    return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Delete Resume Error:", error);
     return NextResponse.json({ error: "Failed to delete resume" }, { status: 500 });

@@ -11,61 +11,81 @@ export interface ActiveUser {
 }
 
 /**
- * Returns the currently authenticated user if logged in, OR automatically
- * provides a seamless guest/demo user so the application works 100% friction-free
- * without requiring login or signup.
+ * Returns a verified, existing database user.
+ * If the session holds a stale or non-existent ID, this safely falls back
+ * to the verified demo user so foreign-key constraints never fail.
  */
 export async function getActiveUser(): Promise<ActiveUser> {
+  let dbUser: any = null;
+
   try {
     const session = await getServerSession(authOptions);
-    if (session?.user && (session.user as any).id) {
-      return {
-        id: (session.user as any).id,
-        email: session.user.email || "demo@resumemaker.com",
-        name: session.user.name || "Professional Candidate",
-        role: (session.user as any).role || "USER",
-        plan: (session.user as any).plan || "PRO",
-      };
+    const sessionUserId = (session?.user as any)?.id;
+    const sessionUserEmail = session?.user?.email;
+
+    // Verify session user actually exists in the current database
+    if (sessionUserId) {
+      dbUser = await prisma.user.findUnique({
+        where: { id: sessionUserId },
+        include: { subscription: true },
+      });
+    }
+
+    if (!dbUser && sessionUserEmail) {
+      dbUser = await prisma.user.findUnique({
+        where: { email: sessionUserEmail.toLowerCase() },
+        include: { subscription: true },
+      });
     }
   } catch (err) {
-    console.warn("Session check failed, falling back to default user:", err);
+    console.warn("Session check fallback:", err);
   }
 
-  // Find existing demo or default user
-  let user = await prisma.user.findFirst({
-    where: { email: "demo@resumemaker.com" },
-    include: { subscription: true },
-  });
-
-  if (!user) {
-    user = await prisma.user.findFirst({
+  // Fallback 1: Use primary demo user
+  if (!dbUser) {
+    dbUser = await prisma.user.findFirst({
+      where: { email: "demo@resumemaker.com" },
       include: { subscription: true },
     });
   }
 
-  if (!user) {
-    // Create default user with PRO access for friction-free editing
-    user = await prisma.user.create({
-      data: {
-        email: "demo@resumemaker.com",
-        name: "Alex Sterling",
-        role: "USER",
-        subscription: {
-          create: {
-            plan: "PRO",
-            status: "ACTIVE",
+  // Fallback 2: Any existing user in database
+  if (!dbUser) {
+    dbUser = await prisma.user.findFirst({
+      include: { subscription: true },
+    });
+  }
+
+  // Fallback 3: Create primary demo user with PRO plan
+  if (!dbUser) {
+    try {
+      dbUser = await prisma.user.create({
+        data: {
+          email: "demo@resumemaker.com",
+          name: "Alex Sterling",
+          role: "USER",
+          subscription: {
+            create: {
+              plan: "PRO",
+              status: "ACTIVE",
+            },
           },
         },
-      },
-      include: { subscription: true },
-    });
+        include: { subscription: true },
+      });
+    } catch {
+      // If race condition occurred, fetch the existing record
+      dbUser = await prisma.user.findFirst({
+        include: { subscription: true },
+      });
+    }
   }
 
   return {
-    id: user.id,
-    email: user.email,
-    name: user.name || "Alex Sterling",
-    role: user.role,
-    plan: user.subscription?.plan || "PRO",
+    id: dbUser.id,
+    email: dbUser.email,
+    name: dbUser.name || "Alex Sterling",
+    role: dbUser.role || "USER",
+    plan: dbUser.subscription?.plan || "PRO",
   };
 }

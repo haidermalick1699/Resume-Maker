@@ -71,6 +71,7 @@ function DashboardInner() {
   };
 
   const handleCreate = async () => {
+    if (creating) return;
     setCreating(true);
     try {
       const res = await fetch("/api/resumes", {
@@ -82,12 +83,18 @@ function DashboardInner() {
         }),
       });
 
-      if (res.ok) {
-        const data = await res.json();
+      const data = await res.json();
+      if (res.ok && data.resume?.id) {
+        setShowCreateModal(false);
         router.push(`/editor/${data.resume.id}`);
+        return;
+      } else {
+        alert(data.error || "Failed to create resume. Please try again.");
       }
     } catch (err) {
-      console.error(err);
+      console.error("Create resume error:", err);
+      alert("Network error creating resume. Please try again.");
+    } finally {
       setCreating(false);
     }
   };
