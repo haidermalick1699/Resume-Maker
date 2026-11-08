@@ -384,6 +384,156 @@ export function buildJsPdfResume(
     }
   }
 
+  // 10. Languages
+  if (resume.languages && resume.languages.length > 0) {
+    addSectionHeader("Languages");
+    const langItems = resume.languages.map(
+      (l) => `${l.language} (${l.fluency || "Proficient"})`
+    );
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(51, 65, 85);
+    const langStr = langItems.join("   •   ");
+    const wrappedLang = doc.splitTextToSize(langStr, contentWidth);
+    for (const line of wrappedLang) {
+      checkPageBreak(13);
+      doc.text(line, margin, y);
+      y += 13;
+    }
+    y += 4;
+  }
+
+  // 11. Awards & Honors
+  if (resume.awards && resume.awards.length > 0) {
+    addSectionHeader("Honors & Awards");
+    for (const aw of resume.awards) {
+      checkPageBreak(15);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(9.5);
+      doc.setTextColor(15, 23, 42);
+      doc.text(aw.title, margin, y);
+
+      const awMeta = [aw.awarder, formatDate(aw.date)].filter(Boolean).join("  •  ");
+      if (awMeta) {
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8.5);
+        doc.setTextColor(100, 116, 139);
+        doc.text(awMeta, margin + contentWidth, y, { align: "right" });
+      }
+      y += 13;
+
+      if (aw.summary && aw.summary.trim()) {
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8.5);
+        doc.setTextColor(71, 85, 105);
+        const sumLines = doc.splitTextToSize(aw.summary.trim(), contentWidth);
+        for (const line of sumLines) {
+          checkPageBreak(12);
+          doc.text(line, margin, y);
+          y += 12;
+        }
+      }
+      y += 3;
+    }
+  }
+
+  // 12. Custom Sections (Preserves all user-defined custom sections!)
+  if (resume.customSections && resume.customSections.length > 0) {
+    for (const sec of resume.customSections) {
+      if (!sec.items || sec.items.length === 0) continue;
+      addSectionHeader(sec.title || "Additional Information");
+
+      for (const item of sec.items) {
+        checkPageBreak(18);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(9.5);
+        doc.setTextColor(15, 23, 42);
+        doc.text(item.title, margin, y);
+
+        if (item.date) {
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(8.5);
+          doc.setTextColor(100, 116, 139);
+          doc.text(item.date, margin + contentWidth, y, { align: "right" });
+        }
+        y += 12;
+
+        if (item.subtitle) {
+          doc.setFont("helvetica", "italic");
+          doc.setFontSize(9);
+          doc.setTextColor(primaryR, primaryG, primaryB);
+          doc.text(item.subtitle, margin, y);
+          y += 12;
+        }
+
+        if (item.summary) {
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(8.5);
+          doc.setTextColor(51, 65, 85);
+          const cLines = doc.splitTextToSize(item.summary, contentWidth);
+          for (const line of cLines) {
+            checkPageBreak(12);
+            doc.text(line, margin, y);
+            y += 12;
+          }
+        }
+
+        if (item.highlights && item.highlights.length > 0) {
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(8.5);
+          for (const bullet of item.highlights) {
+            if (!bullet.trim()) continue;
+            checkPageBreak(13);
+            doc.setTextColor(primaryR, primaryG, primaryB);
+            doc.text("•", margin + 4, y);
+            doc.setTextColor(51, 65, 85);
+            const bLines = doc.splitTextToSize(bullet.trim(), contentWidth - 14);
+            for (let i = 0; i < bLines.length; i++) {
+              if (i > 0) checkPageBreak(12);
+              doc.text(bLines[i], margin + 14, y);
+              y += 12;
+            }
+            y += 2;
+          }
+        }
+        y += 4;
+      }
+    }
+  }
+
+  // 13. References
+  if (resume.references && resume.references.length > 0) {
+    addSectionHeader("References");
+    for (const ref of resume.references) {
+      checkPageBreak(14);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(9.5);
+      doc.setTextColor(15, 23, 42);
+      doc.text(ref.name, margin, y);
+
+      if (ref.contact) {
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8.5);
+        doc.setTextColor(100, 116, 139);
+        doc.text(ref.contact, margin + contentWidth, y, { align: "right" });
+      }
+      y += 12;
+
+      if (ref.reference) {
+        doc.setFont("helvetica", "italic");
+        doc.setFontSize(8.5);
+        doc.setTextColor(71, 85, 105);
+        const refLines = doc.splitTextToSize(ref.reference, contentWidth);
+        for (const line of refLines) {
+          checkPageBreak(12);
+          doc.text(line, margin, y);
+          y += 12;
+        }
+      }
+      y += 4;
+    }
+  }
+
   return doc;
 }
 

@@ -30,63 +30,40 @@ function triggerBrowserDownload(blob: Blob, filename: string): void {
 }
 
 /**
- * Guaranteed PDF Export:
- * 1. Tries server-side generation via /api/resumes/:id/export/pdf (if resumeId provided).
- * 2. If offline, unsaved, unauthenticated, or server errors: instantly falls back to
- *    client-side vector jsPDF generation directly from state.
+ * High-Fidelity Multi-Page PDF Export:
  *
- * Guaranteed to save a real .pdf file directly to disk. NEVER calls window.print().
+ * Priority 1: When in the editor, captures the rendered template directly from
+ * `#resume-page-canvas` at ultra-sharp 300+ DPI Retina resolution.
+ * Automatically slices into exact A4 / Letter pages so that the downloaded PDF is
+ * a 100% exact, pixel-perfect visual replica of the edited and finalized resume!
+ *
+ * Priority 2: When outside the editor (e.g. dashboard direct download), calls
+ * `/api/resumes/:id/export/pdf` which generates a comprehensive vector PDF.
  */
 export async function exportResumeToPdf(options: ExportPdfOptions = {}): Promise<boolean> {
   const rawFilename = (options.filename || "Resume").trim();
   const safeFilename =
     rawFilename.replace(/[^a-zA-Z0-9_\- ]/g, "").replace(/\s+/g, "_") || "Resume";
 
-  // Step 1: Attempt server API download if resumeId is provided
-  if (options.resumeId) {
-    try {
-      const response = await fetch(`/api/resumes/${options.resumeId}/export/pdf`, {
-        method: "GET",
-        headers: { "Cache-Control": "no-cache" },
-      });
-
-      if (response.ok) {
-        const blob = await response.blob();
-        if (blob && blob.size > 100) {
-          triggerBrowserDownload(blob, `${safeFilename}.pdf`);
-          return true;
-        }
-      }
-    } catch (serverError) {
-      console.warn("Server PDF export failed, falling back to instant client vector PDF:", serverError);
-    }
-  }
-
-  // Step 2: Instant Client-Side Vector PDF Generation
-  // Works 100% reliably in any browser with zero network or server dependence
-  try {
-    if (options.data) {
-      const doc = buildJsPdfResume(options.data, options.design);
-      doc.save(`${safeFilename}.pdf`);
-      return true;
-    }
-  } catch (clientDocErr) {
-    console.warn("Client vector PDF generation failed, attempting canvas capture:", clientDocErr);
-  }
-
-  // Step 3: Fallback canvas capture if data is not available
+  // Priority 1: When in the editor, capture the exact rendered template from the DOM
   const element =
-    document.getElementById("resume-page-canvas") ||
-    document.getElementById("resume-export-container");
+    typeof document !== "undefined"
+      ? document.getElementById("resume-page-canvas") ||
+        document.getElementById("resume-export-container")
+      : null;
 
   if (element) {
     try {
       const canvas = await (html2canvas as any)(element, {
-        scale: 2.5,
+        scale: 3, // Ultra-sharp 300+ DPI Retina resolution
         useCORS: true,
+        allowTaint: true,
         logging: false,
         backgroundColor: "#ffffff",
+        imageTimeout: 15000,
         onclone: (clonedDoc: Document) => {
+          // Reset any interactive CSS zoom scale on the cloned document
+          // so that html2canvas captures at full 100% native unscaled resolution
           const clonedContainer = clonedDoc.getElementById("resume-export-container");
           if (clonedContainer) {
             clonedContainer.style.transform = "none";
@@ -107,6 +84,13 @@ export async function exportResumeToPdf(options: ExportPdfOptions = {}): Promise
 
       const { jsPDF } = await import("jspdf");
       const isA4 = options.paperSize !== "LETTER";
+      const pageWidthMm = isA4 ? 210 : 215.9;
+      const pageHeightMm = isA4 ? 297 : 279.4;
+
+      const canvasWidth = canvas.width;
+      const canvasHeight = canvas.height;
+      const totalImgHeightMm = (canvasHeight * pageWidthMm) / canvasWidth;
+
       const pdf = new jsPDF({
         orientation: "portrait",
         unit: "mm",
@@ -114,37 +98,96 @@ export async function exportResumeToPdf(options: ExportPdfOptions = {}): Promise
         compress: true,
       });
 
-      const imgWidth = isA4 ? 210 : 215.9;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      const imgData = canvas.toDataURL("image/jpeg", 0.95);
+      const imgData = canvas.toDataURL("image/png");
 
-      pdf.addImage(imgData, "JPEG", 0, 0, imgWidth, imgHeight, undefined, "FAST");
+      let heightLeftMm = totalImgHeightMm;
+      let positionMm = 0;
+
+      // Add first page
+      pdf.addImage(imgData, "PNG", 0, positionMm, pageWidthMm, totalImgHeightMm, undefined, "FAST");
+      heightLeftMm -= pageHeightMm;
+
+      // Add subsequent pages if resume content extends beyond 1 page
+      // so zero content is ever cut off!
+      while (heightLeftMm > 2) {
+        positionMm -= pageHeightMm;
+        pdf.addPage();
+        pdf.addImage(imgData, "PNG", 0, positionMm, pageWidthMm, totalImgHeightMm, undefined, "FAST");
+        heightLeftMm -= pageHeightMm;
+      }
+
       pdf.save(`${safeFilename}.pdf`);
       return true;
     } catch (canvasErr) {
-      console.error("Canvas export failed:", canvasErr);
+      console.warn("DOM template PDF capture failed, falling back to server vector PDF:", canvasErr);
     }
+  }
+
+  // Priority 2: Attempt server API download if resumeId is provided
+  if (options.resumeId) {
+    try {
+      const response = await fetch(`/api/resumes/${options.resumeId}/export/pdf`, {
+        method: "GET",
+        headers: { "Cache-Control": "no-cache" },
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        if (blob && blob.size > 100) {
+          triggerBrowserDownload(blob, `${safeFilename}.pdf`);
+          return true;
+        }
+      }
+    } catch (serverError) {
+      console.warn("Server PDF export failed, falling back to client vector PDF:", serverError);
+    }
+  }
+
+  // Priority 3: Client-side vector jsPDF generation directly from state
+  try {
+    if (options.data) {
+      const doc = buildJsPdfResume(options.data, options.design);
+      doc.save(`${safeFilename}.pdf`);
+      return true;
+    }
+  } catch (clientDocErr) {
+    console.error("All PDF generation methods failed:", clientDocErr);
   }
 
   return false;
 }
 
 /**
- * Directly downloads the resume as a Microsoft Word (.docx) document.
+ * Directly downloads the resume as a Microsoft Word (.docx) document,
+ * sending current in-memory resume data if available to preserve 100% of the
+ * edited and finalized content.
  */
 export async function exportResumeToDocx(options: {
-  resumeId: string;
+  resumeId?: string | null;
   filename?: string;
+  data?: ResumeData;
 }): Promise<boolean> {
   const rawFilename = (options.filename || "Resume").trim();
   const safeFilename =
     rawFilename.replace(/[^a-zA-Z0-9_\- ]/g, "").replace(/\s+/g, "_") || "Resume";
 
   try {
-    const response = await fetch(`/api/resumes/${options.resumeId}/export/docx`, {
-      method: "GET",
-      headers: { "Cache-Control": "no-cache" },
-    });
+    let response: Response;
+
+    if (options.data && options.resumeId) {
+      response = await fetch(`/api/resumes/${options.resumeId}/export/docx`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: options.data, title: options.filename }),
+      });
+    } else if (options.resumeId) {
+      response = await fetch(`/api/resumes/${options.resumeId}/export/docx`, {
+        method: "GET",
+        headers: { "Cache-Control": "no-cache" },
+      });
+    } else {
+      throw new Error("No resume ID provided");
+    }
 
     if (!response.ok) {
       throw new Error(`DOCX export failed with status: ${response.status}`);

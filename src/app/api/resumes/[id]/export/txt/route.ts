@@ -88,6 +88,51 @@ export async function GET(
       });
     }
 
+    // Certificates
+    if (data.certificates && data.certificates.length > 0) {
+      txt += `CERTIFICATES & LICENSES\n${"-".repeat(30)}\n`;
+      data.certificates.forEach((c: any) => {
+        txt += `${c.name} — ${c.issuer || ""} (${formatDate(c.date)})\n`;
+      });
+      txt += "\n";
+    }
+
+    // Languages
+    if (data.languages && data.languages.length > 0) {
+      txt += `LANGUAGES\n${"-".repeat(30)}\n`;
+      data.languages.forEach((l: any) => {
+        txt += `${l.language}: ${l.fluency || "Proficient"}\n`;
+      });
+      txt += "\n";
+    }
+
+    // Awards
+    if (data.awards && data.awards.length > 0) {
+      txt += `AWARDS & HONORS\n${"-".repeat(30)}\n`;
+      data.awards.forEach((a: any) => {
+        txt += `${a.title} — ${a.awarder || ""} (${formatDate(a.date)})\n`;
+        if (a.summary) txt += `${a.summary}\n`;
+      });
+      txt += "\n";
+    }
+
+    // Custom Sections
+    if (data.customSections && data.customSections.length > 0) {
+      data.customSections.forEach((sec: any) => {
+        if (!sec.items || sec.items.length === 0) return;
+        txt += `${(sec.title || "ADDITIONAL INFORMATION").toUpperCase()}\n${"-".repeat(30)}\n`;
+        sec.items.forEach((item: any) => {
+          txt += `${item.title}${item.date ? ` (${item.date})` : ""}\n`;
+          if (item.subtitle) txt += `${item.subtitle}\n`;
+          if (item.summary) txt += `${item.summary}\n`;
+          item.highlights?.forEach((h: string) => {
+            if (h.trim()) txt += `* ${h}\n`;
+          });
+          txt += "\n";
+        });
+      });
+    }
+
     const safeTitle = (resume.title || "Resume").replace(/[^a-zA-Z0-9_-]/g, "_");
 
     return new NextResponse(txt, {

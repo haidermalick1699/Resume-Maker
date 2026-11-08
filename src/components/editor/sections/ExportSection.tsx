@@ -71,6 +71,7 @@ export const ExportSection: React.FC = () => {
         await exportResumeToDocx({
           resumeId,
           filename: title || "Resume",
+          data,
         });
         notify("success", "✓ Word document (.docx) successfully downloaded!");
       } else {

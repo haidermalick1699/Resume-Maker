@@ -70,6 +70,7 @@ export const PreviewViewport: React.FC = () => {
         await exportResumeToDocx({
           resumeId,
           filename: title || "Resume",
+          data,
         });
         triggerToast("✓ Word document downloaded!");
       }

@@ -131,6 +131,7 @@ export const EditorHeader: React.FC = () => {
         await exportResumeToDocx({
           resumeId,
           filename: title || "Resume",
+          data,
         });
         showToast("success", "✓ Word document downloaded successfully!");
       } else {
