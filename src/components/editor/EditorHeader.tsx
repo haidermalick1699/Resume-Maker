@@ -145,17 +145,20 @@ export const EditorHeader: React.FC = () => {
   };
 
   /**
-   * Triggers a direct high-resolution PNG image download.
+   * Triggers a direct ultra-high-resolution PNG image download.
    */
   const handleDownloadPng = async () => {
     setShowMoreMenu(false);
     setIsExportingPng(true);
-    showToast("info", "Capturing high-resolution PNG image...");
+    showToast("info", "Capturing crystal-sharp PNG image...");
 
     try {
+      if (isDirty) {
+        await saveResume();
+      }
       const ok = await exportResumeToPng({ filename: title || "Resume" });
       if (ok) {
-        showToast("success", "✓ Resume image saved as PNG!");
+        showToast("success", "✓ High-resolution PNG image downloaded!");
       } else {
         showToast("error", "Failed to generate PNG image.");
       }

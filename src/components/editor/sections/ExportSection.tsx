@@ -88,11 +88,14 @@ export const ExportSection: React.FC = () => {
     setDownloadingPng(true);
     setStatusMessage(null);
     try {
+      if (isDirty) {
+        await saveResume();
+      }
       const ok = await exportResumeToPng({
         filename: title || "Resume",
       });
       if (ok) {
-        notify("success", "✓ Resume image (.png) successfully downloaded!");
+        notify("success", "✓ Ultra-sharp PNG image successfully downloaded!");
       } else {
         notify("error", "Failed to capture image screenshot.");
       }

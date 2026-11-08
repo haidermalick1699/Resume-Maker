@@ -1,17 +1,12 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { getActiveUser } from "@/server/auth/current-user";
 import { prisma } from "@/server/db/prisma";
 import { auditResumeAts } from "@/server/services/ats.service";
 import { applyRateLimit } from "@/server/middleware/rate-limit";
 
 export async function POST(req: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user || !(session.user as any).id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  const rateLimit = applyRateLimit(req, "ai", (session.user as any).id);
+  const user = await getActiveUser();
+  const rateLimit = applyRateLimit(req, "ai", user.id);
   if (rateLimit.response) return rateLimit.response;
 
   try {

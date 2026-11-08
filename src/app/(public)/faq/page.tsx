@@ -30,8 +30,11 @@ export default function FaqPage() {
           </div>
           <span className="font-extrabold text-base text-slate-900 tracking-tight">Resume Maker</span>
         </Link>
-        <Link href="/login" className="text-xs font-semibold text-slate-700 hover:text-slate-900">
-          Sign In
+        <Link
+          href="/dashboard"
+          className="text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-2 rounded-xl shadow-xs transition"
+        >
+          Go to Workspace
         </Link>
       </header>
 

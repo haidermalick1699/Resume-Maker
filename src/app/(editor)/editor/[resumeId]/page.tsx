@@ -28,10 +28,6 @@ export default function ResumeEditorPage() {
     async function loadResume() {
       try {
         const res = await fetch(`/api/resumes/${resumeId}`);
-        if (res.status === 401) {
-          router.push(`/login?callbackUrl=/editor/${resumeId}`);
-          return;
-        }
         if (!res.ok) {
           throw new Error("Resume not found");
         }

@@ -34,14 +34,11 @@ export default function TemplatesPage() {
           <span className="font-extrabold text-base text-slate-900 tracking-tight">Resume Maker</span>
         </Link>
         <div className="flex items-center gap-3">
-          <Link href="/login" className="text-xs font-semibold text-slate-700 hover:text-slate-900">
-            Sign In
-          </Link>
           <Link
-            href="/register"
-            className="text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg shadow-xs"
+            href="/dashboard"
+            className="text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-2 rounded-xl shadow-xs transition"
           >
-            Create Resume
+            Go to Workspace
           </Link>
         </div>
       </header>
@@ -119,7 +116,7 @@ export default function TemplatesPage() {
               </div>
 
               <Link
-                href={`/register?template=${tmpl.id}`}
+                href={`/dashboard?template=${tmpl.id}`}
                 className="w-full flex items-center justify-center gap-1.5 text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 py-2.5 rounded-xl transition"
               >
                 Use This Template <ArrowRight className="w-3.5 h-3.5" />

@@ -18,15 +18,14 @@ import {
 } from "lucide-react";
 
 export default function HomePage() {
-  const { data: session } = useSession();
-  const ctaLink = session ? "/dashboard" : "/register";
+  const ctaLink = "/dashboard";
 
   return (
     <div className="min-h-screen bg-white text-slate-900 flex flex-col selection:bg-blue-100 selection:text-blue-900">
       {/* Subtle top ambient lighting */}
       <div className="absolute top-0 inset-x-0 h-80 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(59,130,246,0.12),rgba(255,255,255,0))] pointer-events-none -z-10" />
 
-      {/* Clean Navbar with Functional Links Only */}
+      {/* Clean Navbar with Direct Access */}
       <header className="border-b border-slate-200/80 sticky top-0 bg-white/90 backdrop-blur-md z-40">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           {/* Logo */}
@@ -52,31 +51,15 @@ export default function HomePage() {
             </Link>
           </nav>
 
-          {/* Functional Auth Actions */}
+          {/* Direct Workspace Actions */}
           <div className="flex items-center gap-2 sm:gap-3">
-            {session ? (
-              <Link
-                href="/dashboard"
-                className="text-xs sm:text-sm font-bold bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl shadow-xs transition"
-              >
-                Go to Dashboard
-              </Link>
-            ) : (
-              <>
-                <Link
-                  href="/login"
-                  className="text-xs sm:text-sm font-semibold text-slate-700 hover:text-slate-900 px-3 py-2 rounded-xl hover:bg-slate-100 transition-colors"
-                >
-                  Log In
-                </Link>
-                <Link
-                  href="/register"
-                  className="text-xs sm:text-sm font-bold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 py-2 rounded-xl shadow-xs hover:shadow-md transition-all active:scale-98"
-                >
-                  Start Free
-                </Link>
-              </>
-            )}
+            <Link
+              href="/dashboard"
+              className="text-xs sm:text-sm font-bold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-5 py-2.5 rounded-xl shadow-xs hover:shadow-md transition-all active:scale-98 flex items-center gap-1.5"
+            >
+              <span>Build Resume Free</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
         </div>
       </header>

@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { signOut, useSession } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import {
   Plus,
   FileText,
@@ -11,7 +11,6 @@ import {
   Trash2,
   ExternalLink,
   Loader2,
-  LogOut,
   Sparkles,
   ShieldCheck,
   Clock,
@@ -28,9 +27,10 @@ interface ResumeSummary {
   updatedAt: string;
 }
 
-export default function DashboardPage() {
+function DashboardInner() {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const searchParams = useSearchParams();
+  const { data: session } = useSession();
   const [resumes, setResumes] = useState<ResumeSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
@@ -38,17 +38,23 @@ export default function DashboardPage() {
   const [selectedTemplate, setSelectedTemplate] = useState("modern-minimal");
   const [newTitle, setNewTitle] = useState("My Resume");
 
-  // Fetch user resumes
+  // Fetch resumes unconditionally on mount
   useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/login");
-      return;
-    }
+    fetchResumes();
+  }, []);
 
-    if (status === "authenticated") {
-      fetchResumes();
+  // Handle URL params for template selection from external/template links
+  useEffect(() => {
+    const tmpl = searchParams.get("template");
+    const role = searchParams.get("role");
+    if (tmpl) {
+      setSelectedTemplate(tmpl);
+      if (role) {
+        setNewTitle(`${decodeURIComponent(role)} Resume`);
+      }
+      setShowCreateModal(true);
     }
-  }, [status, router]);
+  }, [searchParams]);
 
   const fetchResumes = async () => {
     try {
@@ -111,11 +117,11 @@ export default function DashboardPage() {
     }
   };
 
-  if (status === "loading" || loading) {
+  if (loading) {
     return (
       <div className="h-screen w-screen flex flex-col items-center justify-center bg-slate-50">
         <Loader2 className="w-8 h-8 animate-spin text-blue-600 mb-3" />
-        <p className="text-sm font-medium text-slate-600">Loading your dashboard...</p>
+        <p className="text-sm font-medium text-slate-600">Loading your resumes...</p>
       </div>
     );
   }
@@ -123,41 +129,45 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       {/* Top Navigation */}
-      <header className="bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-6 py-4 flex items-center justify-between sticky top-0 z-20 shadow-xs">
+      <header className="bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-6 py-3.5 flex items-center justify-between sticky top-0 z-20 shadow-xs">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-linear-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center text-white font-black text-sm shadow-xs">
-            RM
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <div className="w-9 h-9 bg-linear-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center text-white font-black text-sm shadow-xs group-hover:scale-105 transition-transform">
+              RM
+            </div>
+            <span className="font-extrabold text-lg tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors">
+              Resume Maker
+            </span>
+          </Link>
+
+          <div className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold ml-2">
+            <Sparkles className="w-3 h-3 text-emerald-600" />
+            <span>Pro Unlocked</span>
           </div>
-          <span className="font-extrabold text-lg tracking-tight text-slate-900">
-            Resume Maker
-          </span>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <Link
-            href="/billing"
-            className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-slate-700 hover:text-blue-600 bg-slate-100 hover:bg-slate-200/80 px-3 py-1.5 rounded-lg transition"
+            href="/templates"
+            className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 hover:text-blue-600 bg-slate-100 hover:bg-slate-200/80 px-3 py-2 rounded-xl transition"
           >
-            <Sparkles className="w-3.5 h-3.5 text-amber-500" /> Plan & Billing
+            <span>Templates</span>
           </Link>
           <a
             href="/api/user/export"
             download
-            className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-slate-700 hover:text-blue-600 bg-slate-100 hover:bg-slate-200/80 px-3 py-1.5 rounded-lg transition"
-            title="Export all resume and account data in JSON format"
+            className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-slate-700 hover:text-blue-600 bg-slate-100 hover:bg-slate-200/80 px-3 py-2 rounded-xl transition"
+            title="Export all resume data in JSON format"
           >
-            <Download className="w-3.5 h-3.5 text-slate-600" /> Export Data
+            <Download className="w-3.5 h-3.5 text-slate-600" />
+            <span>Export Data</span>
           </a>
-          <div className="text-right hidden md:block border-l border-slate-200 pl-3">
-            <div className="text-xs font-bold text-slate-800">{session?.user?.name || "User"}</div>
-            <div className="text-[11px] text-slate-500">{session?.user?.email}</div>
-          </div>
           <button
-            onClick={() => signOut({ callbackUrl: "/" })}
-            className="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition"
-            title="Log Out"
+            onClick={() => setShowCreateModal(true)}
+            className="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs px-3.5 py-2 rounded-xl shadow-xs transition"
           >
-            <LogOut className="w-4 h-4" />
+            <Plus className="w-3.5 h-3.5" />
+            <span>New Resume</span>
           </button>
         </div>
       </header>
@@ -244,6 +254,14 @@ export default function DashboardPage() {
                     </span>
 
                     <div className="flex items-center gap-1.5">
+                      <a
+                        href={`/api/resumes/${resume.id}/export/pdf`}
+                        download
+                        className="p-1.5 hover:bg-blue-50 text-slate-500 hover:text-blue-700 rounded-lg transition"
+                        title="Download PDF"
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                      </a>
                       <a
                         href={`/api/resumes/${resume.id}/export/docx`}
                         download
@@ -354,6 +372,21 @@ export default function DashboardPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="h-screen w-screen flex flex-col items-center justify-center bg-slate-50">
+          <Loader2 className="w-8 h-8 animate-spin text-blue-600 mb-3" />
+          <p className="text-sm font-medium text-slate-600">Loading your dashboard...</p>
+        </div>
+      }
+    >
+      <DashboardInner />
+    </Suspense>
   );
 }
 

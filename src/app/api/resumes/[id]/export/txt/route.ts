@@ -1,6 +1,4 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 import { prisma } from "@/server/db/prisma";
 import { formatDate } from "@/lib/utils";
 
@@ -8,21 +6,15 @@ export async function GET(
   _req: Request,
   { params }: { params: { id: string } }
 ) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user || !(session.user as any).id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  const userId = (session.user as any).id;
-  const resume = await prisma.resume.findFirst({
-    where: { id: params.id, userId },
-  });
-
-  if (!resume) {
-    return NextResponse.json({ error: "Resume not found" }, { status: 404 });
-  }
-
   try {
+    const resume = await prisma.resume.findUnique({
+      where: { id: params.id },
+    });
+
+    if (!resume) {
+      return NextResponse.json({ error: "Resume not found" }, { status: 404 });
+    }
+
     const data = typeof resume.content === "string" ? JSON.parse(resume.content) : resume.content;
     const { basics, work, education, skills, projects } = data;
 

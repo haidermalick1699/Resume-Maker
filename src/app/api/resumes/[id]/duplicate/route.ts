@@ -1,20 +1,18 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 import { prisma } from "@/server/db/prisma";
+import { getActiveUser } from "@/server/auth/current-user";
+
+export const dynamic = "force-dynamic";
 
 export async function POST(
   _req: Request,
   { params }: { params: { id: string } }
 ) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user || !(session.user as any).id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const user = await getActiveUser();
+  const userId = user.id;
 
-  const userId = (session.user as any).id;
   const original = await prisma.resume.findFirst({
-    where: { id: params.id, userId },
+    where: { id: params.id },
   });
 
   if (!original) {
@@ -35,4 +33,3 @@ export async function POST(
 
   return NextResponse.json({ resume: duplicated }, { status: 201 });
 }
-

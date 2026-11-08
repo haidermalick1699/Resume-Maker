@@ -64,11 +64,8 @@ export default function ProfessionLandingPage({ params }: PageProps) {
           <span className="font-extrabold text-base text-slate-900 tracking-tight">Resume Maker</span>
         </Link>
         <div className="flex items-center gap-3">
-          <Link href="/login" className="text-xs font-semibold text-slate-700 hover:text-slate-900">
-            Sign In
-          </Link>
           <Link
-            href={`/register?template=${recommendedTemplate.id}&role=${encodeURIComponent(prof.name)}`}
+            href={`/dashboard?template=${recommendedTemplate.id}&role=${encodeURIComponent(prof.name)}`}
             className="text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-1.5 rounded-lg shadow-xs"
           >
             Build {prof.name} Resume
@@ -93,7 +90,7 @@ export default function ProfessionLandingPage({ params }: PageProps) {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
-              href={`/register?template=${recommendedTemplate.id}&role=${encodeURIComponent(prof.name)}`}
+              href={`/dashboard?template=${recommendedTemplate.id}&role=${encodeURIComponent(prof.name)}`}
               className="w-full sm:w-auto flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm px-6 py-3.5 rounded-xl shadow-sm transition"
             >
               Use This {prof.name} Template Free <ArrowRight className="w-4 h-4" />
@@ -128,7 +125,7 @@ export default function ProfessionLandingPage({ params }: PageProps) {
           </div>
 
           <Link
-            href={`/register?template=${recommendedTemplate.id}&role=${encodeURIComponent(prof.name)}`}
+            href={`/dashboard?template=${recommendedTemplate.id}&role=${encodeURIComponent(prof.name)}`}
             className="shrink-0 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs px-5 py-3 rounded-xl transition shadow-xs"
           >
             Customize in Editor

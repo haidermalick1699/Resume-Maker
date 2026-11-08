@@ -83,11 +83,14 @@ export const PreviewViewport: React.FC = () => {
   const handleQuickPng = async () => {
     setDownloadingPng(true);
     try {
+      if (isDirty) {
+        await saveResume();
+      }
       const ok = await exportResumeToPng({
         filename: title || "Resume",
       });
       if (ok) {
-        triggerToast("✓ PNG image downloaded!");
+        triggerToast("✓ High-resolution PNG image downloaded!");
       }
     } finally {
       setDownloadingPng(false);
@@ -180,11 +183,15 @@ export const PreviewViewport: React.FC = () => {
           <button
             onClick={handleQuickPng}
             disabled={downloadingPng}
-            className="hidden md:flex items-center gap-1 px-2.5 py-1.5 hover:bg-slate-100 text-slate-600 rounded-lg text-xs font-medium transition"
-            title="Save Resume as PNG"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-slate-700 hover:text-emerald-900 rounded-lg text-xs font-semibold shadow-2xs transition"
+            title="Save High-Resolution Resume Image (PNG)"
           >
-            <FileImage className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Image</span>
+            {downloadingPng ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-emerald-600" />
+            ) : (
+              <FileImage className="w-3.5 h-3.5 text-emerald-600" />
+            )}
+            <span className="hidden xs:inline">Save as </span>Image
           </button>
         </div>
       </div>

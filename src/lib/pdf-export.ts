@@ -82,10 +82,27 @@ export async function exportResumeToPdf(options: ExportPdfOptions = {}): Promise
   if (element) {
     try {
       const canvas = await (html2canvas as any)(element, {
-        scale: 2,
+        scale: 2.5,
         useCORS: true,
         logging: false,
         backgroundColor: "#ffffff",
+        onclone: (clonedDoc: Document) => {
+          const clonedContainer = clonedDoc.getElementById("resume-export-container");
+          if (clonedContainer) {
+            clonedContainer.style.transform = "none";
+            clonedContainer.style.margin = "0";
+            clonedContainer.style.padding = "0";
+            clonedContainer.style.width = "auto";
+            clonedContainer.style.height = "auto";
+          }
+          const clonedCanvas = clonedDoc.getElementById("resume-page-canvas");
+          if (clonedCanvas) {
+            clonedCanvas.style.transform = "none";
+            clonedCanvas.style.boxShadow = "none";
+            clonedCanvas.style.margin = "0";
+            clonedCanvas.style.maxWidth = "none";
+          }
+        },
       });
 
       const { jsPDF } = await import("jspdf");
@@ -143,7 +160,8 @@ export async function exportResumeToDocx(options: {
 }
 
 /**
- * Directly downloads the resume canvas element as a high-resolution PNG image file.
+ * Directly downloads the resume canvas element as an ultra-high-resolution, razor-sharp PNG image.
+ * Uses 3x retina scaling (~2400 x 3400 pixels) with transform-neutralization to eliminate any blurriness.
  */
 export async function exportResumeToPng(options: { filename?: string } = {}): Promise<boolean> {
   const element =
@@ -160,23 +178,59 @@ export async function exportResumeToPng(options: { filename?: string } = {}): Pr
     rawFilename.replace(/[^a-zA-Z0-9_\- ]/g, "").replace(/\s+/g, "_") || "Resume";
 
   try {
+    // Render at 3x scale (300+ DPI Retina equivalent: ~2400 x 3400 px)
     const canvas = await (html2canvas as any)(element, {
-      scale: 2,
+      scale: 3,
       useCORS: true,
+      allowTaint: true,
       logging: false,
       backgroundColor: "#ffffff",
+      imageTimeout: 15000,
+      onclone: (clonedDoc: Document) => {
+        // Reset any CSS transform (such as zoom scale) on the cloned document
+        // so that html2canvas captures at full 100% native unscaled resolution
+        const clonedContainer = clonedDoc.getElementById("resume-export-container");
+        if (clonedContainer) {
+          clonedContainer.style.transform = "none";
+          clonedContainer.style.margin = "0";
+          clonedContainer.style.padding = "0";
+          clonedContainer.style.width = "auto";
+          clonedContainer.style.height = "auto";
+        }
+        const clonedCanvas = clonedDoc.getElementById("resume-page-canvas");
+        if (clonedCanvas) {
+          clonedCanvas.style.transform = "none";
+          clonedCanvas.style.boxShadow = "none";
+          clonedCanvas.style.margin = "0";
+          clonedCanvas.style.maxWidth = "none";
+        }
+      },
     });
 
-    const dataUrl = canvas.toDataURL("image/png");
-    const link = document.createElement("a");
-    link.href = dataUrl;
-    link.download = `${safeFilename}.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    return true;
+    // Use toBlob for maximum PNG fidelity and to avoid data URL size truncation
+    return new Promise<boolean>((resolve) => {
+      canvas.toBlob(
+        (blob: Blob | null) => {
+          if (!blob) {
+            // Fallback to dataURL if toBlob is unavailable
+            const dataUrl = canvas.toDataURL("image/png");
+            const link = document.createElement("a");
+            link.href = dataUrl;
+            link.download = `${safeFilename}.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            resolve(true);
+            return;
+          }
+          triggerBrowserDownload(blob, `${safeFilename}.png`);
+          resolve(true);
+        },
+        "image/png"
+      );
+    });
   } catch (error) {
-    console.error("PNG export failed:", error);
+    console.error("High-res PNG export failed:", error);
     return false;
   }
 }
