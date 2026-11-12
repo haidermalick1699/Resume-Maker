@@ -166,10 +166,11 @@ function DashboardInner() {
           </a>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs px-3.5 py-2 rounded-xl shadow-xs transition"
+            className="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs px-3 sm:px-3.5 py-2 rounded-xl shadow-xs transition"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>New Resume</span>
+            <span className="hidden xs:inline">New Resume</span>
+            <span className="xs:hidden">New</span>
           </button>
         </div>
       </header>
@@ -327,13 +328,13 @@ function DashboardInner() {
       {/* Create Resume Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl animate-in fade-in zoom-in-95">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-4 sm:p-6 shadow-2xl animate-in fade-in zoom-in-95 max-h-[92vh] flex flex-col overflow-hidden">
             <h2 className="text-lg font-bold text-slate-900 mb-1">Create New Resume</h2>
             <p className="text-xs text-slate-500 mb-4">
               Choose a title and starting template layout.
             </p>
 
-            <div className="space-y-4 mb-6">
+            <div className="space-y-4 mb-6 overflow-y-auto pr-0.5 flex-1">
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
                   Resume Title
@@ -351,7 +352,7 @@ function DashboardInner() {
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
                   Starting Template
                 </label>
-                <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+                <div className="space-y-2 max-h-52 overflow-y-auto pr-1">
                   {TEMPLATES.map((tmpl) => (
                     <div
                       key={tmpl.id}

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Merriweather } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/components/providers/AuthProvider";
@@ -14,6 +14,14 @@ const merriweather = Merriweather({
   subsets: ["latin"],
   variable: "--font-merriweather",
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: "#2563EB",
+};
 
 export const metadata: Metadata = {
   title: "Resume Maker — Free Professional Resume Builder & ATS Resume Generator",

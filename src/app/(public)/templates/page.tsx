@@ -53,12 +53,12 @@ export default function TemplatesPage() {
         {/* Filter Controls */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
           {/* Category Tabs */}
-          <div className="flex bg-white border border-slate-200 p-1 rounded-xl text-xs font-medium w-full sm:w-auto">
+          <div className="flex overflow-x-auto no-scrollbar bg-white border border-slate-200 p-1 rounded-xl text-xs font-medium w-full sm:w-auto">
             {["all", "modern", "classic", "creative"].map((cat) => (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-1.5 rounded-lg capitalize transition ${
+                className={`px-4 py-1.5 rounded-lg capitalize transition shrink-0 ${
                   selectedCategory === cat
                     ? "bg-blue-600 text-white shadow-xs font-semibold"
                     : "text-slate-600 hover:text-slate-900"

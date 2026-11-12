@@ -96,34 +96,50 @@ export default function ResumeEditorPage() {
     );
   }
 
+  const isDesktopMode = activeMobileTab === "desktop";
+
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-white">
       {/* Top Header */}
       <EditorHeader />
 
-      {/* Main Workspace */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* Navigation Sidebar */}
-        <EditorSidebar />
+      {/* Main Workspace Wrapper (Enables smooth horizontal scrolling if desktop view is forced on small screens) */}
+      <div className="flex-1 flex overflow-hidden relative">
+        <div
+          className={`flex-1 flex overflow-hidden ${
+            isDesktopMode ? "overflow-x-auto min-w-[1020px]" : ""
+          }`}
+        >
+          {/* Navigation Sidebar */}
+          <EditorSidebar isDesktopForced={isDesktopMode} />
 
-        {/* Desktop Split View / Mobile Single View */}
-        <div className="flex-1 flex overflow-hidden">
-          {/* Form Editor Column */}
-          <div
-            className={`w-full lg:w-1/2 flex flex-col border-r border-slate-200 bg-white ${
-              activeMobileTab === "editor" ? "flex" : "hidden lg:flex"
-            }`}
-          >
-            <EditorPanel />
-          </div>
+          {/* Dual Column Workspace */}
+          <div className="flex-1 flex overflow-hidden min-w-0">
+            {/* Form Editor Column */}
+            <div
+              className={`flex-col border-r border-slate-200 bg-white min-w-0 ${
+                isDesktopMode
+                  ? "flex w-[480px] shrink-0"
+                  : activeMobileTab === "editor"
+                  ? "flex w-full md:w-1/2"
+                  : "hidden md:flex md:w-1/2"
+              }`}
+            >
+              <EditorPanel />
+            </div>
 
-          {/* Live Preview Column */}
-          <div
-            className={`w-full lg:w-1/2 flex flex-col ${
-              activeMobileTab === "preview" ? "flex" : "hidden lg:flex"
-            }`}
-          >
-            <PreviewViewport />
+            {/* Live Preview Column */}
+            <div
+              className={`flex-col min-w-0 ${
+                isDesktopMode
+                  ? "flex w-[540px] shrink-0"
+                  : activeMobileTab === "preview"
+                  ? "flex w-full md:w-1/2"
+                  : "hidden md:flex md:w-1/2"
+              }`}
+            >
+              <PreviewViewport isDesktopForced={isDesktopMode} />
+            </div>
           </div>
         </div>
       </div>

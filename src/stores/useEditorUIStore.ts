@@ -11,18 +11,21 @@ export type EditorSectionKey =
   | "templates"
   | "export";
 
+export type ActiveTabMode = "editor" | "preview" | "desktop";
+
 interface EditorUIState {
   activeSection: EditorSectionKey;
-  activeMobileTab: "editor" | "preview";
+  activeMobileTab: ActiveTabMode;
   zoom: number;
   isExporting: boolean;
 
   setActiveSection: (section: EditorSectionKey) => void;
-  setActiveMobileTab: (tab: "editor" | "preview") => void;
+  setActiveMobileTab: (tab: ActiveTabMode) => void;
   setZoom: (zoom: number) => void;
   zoomIn: () => void;
   zoomOut: () => void;
   resetZoom: () => void;
+  fitToWidth: (availableWidth: number, paperWidth?: number) => void;
   setIsExporting: (val: boolean) => void;
 }
 
@@ -34,10 +37,17 @@ export const useEditorUIStore = create<EditorUIState>((set) => ({
 
   setActiveSection: (activeSection) => set({ activeSection }),
   setActiveMobileTab: (activeMobileTab) => set({ activeMobileTab }),
-  setZoom: (zoom) => set({ zoom: Math.min(Math.max(zoom, 0.5), 1.5) }),
-  zoomIn: () => set((state) => ({ zoom: Math.min(state.zoom + 0.1, 1.5) })),
-  zoomOut: () => set((state) => ({ zoom: Math.max(state.zoom - 0.1, 0.5) })),
+  setZoom: (zoom) => set({ zoom: Math.min(Math.max(zoom, 0.25), 2.0) }),
+  zoomIn: () => set((state) => ({ zoom: Math.min(state.zoom + 0.1, 2.0) })),
+  zoomOut: () => set((state) => ({ zoom: Math.max(state.zoom - 0.1, 0.25) })),
   resetZoom: () => set({ zoom: 1 }),
+  fitToWidth: (availableWidth: number, paperWidth = 794) => {
+    // Leave 24px-32px padding for margins
+    const targetWidth = Math.max(availableWidth - 28, 260);
+    const calculatedScale = Number((targetWidth / paperWidth).toFixed(2));
+    const clampedScale = Math.min(Math.max(calculatedScale, 0.3), 1.25);
+    set({ zoom: clampedScale });
+  },
   setIsExporting: (isExporting) => set({ isExporting }),
 }));
 
